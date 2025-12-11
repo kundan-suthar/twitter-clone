@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@layer base {
+    body {
+        @apply bg-black text-[#e7e9ea] overflow-y-scroll;
+    }
+}
+
+/* Custom Scrollbar for hidden scrollbars but scrollable areas */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
