@@ -11,11 +11,11 @@ import {
     MoreHorizontal,
     PenTool
 } from 'lucide-react';
-import { useAuthStore } from '../../store/authStore';
+import { useAppStore } from '../../store/useAppStore';
 import Button from '../ui/Button';
 
 const Sidebar = () => {
-    const user = useAuthStore((state) => state.user);
+    const user = useAppStore((state) => state.user);
 
     const navItems = [
         { icon: Home, label: 'Home', path: '/home' },

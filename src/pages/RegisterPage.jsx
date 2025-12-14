@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
+import { useAppStore } from '../store/useAppStore';
 import Button from '../components/ui/Button';
 import { useForm } from 'react-hook-form';
 
@@ -11,11 +11,11 @@ const RegisterPage = () => {
         formState: { errors },
     } = useForm();
 
-    const signup = useAuthStore((state) => state.signup);
+    const signup = useAppStore((state) => state.signup);
     const navigate = useNavigate();
 
-    const onSubmit = (data) => {
-        const success = signup(data);
+    const onSubmit = async (data) => {
+        const success = await signup(data);
         if (success) navigate('/home');
     };
 
@@ -54,8 +54,8 @@ const RegisterPage = () => {
                                     type="text"
                                     placeholder="Full Name"
                                     className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.fullName
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                        : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
                                         }`}
                                     {...register('fullName', { required: 'Full Name is required' })}
                                 />
@@ -69,8 +69,8 @@ const RegisterPage = () => {
                                     type="email"
                                     placeholder="Email"
                                     className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.email
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                        : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
                                         }`}
                                     {...register('email', {
                                         required: 'Email is required',
@@ -90,8 +90,8 @@ const RegisterPage = () => {
                                     type="text"
                                     placeholder="Username"
                                     className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.username
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                        : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
                                         }`}
                                     {...register('username', { required: 'Username is required' })}
                                 />
@@ -105,8 +105,8 @@ const RegisterPage = () => {
                                     type="password"
                                     placeholder="Password"
                                     className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.password
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                        : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
                                         }`}
                                     {...register('password', {
                                         required: 'Password is required',

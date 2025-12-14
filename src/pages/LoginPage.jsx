@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuthStore } from '../store/authStore';
+import { useAppStore } from '../store/useAppStore';
 import Button from '../components/ui/Button';
 import { useForm } from 'react-hook-form';
 
@@ -11,7 +11,7 @@ const LoginPage = () => {
         formState: { errors },
     } = useForm();
 
-    const login = useAuthStore((state) => state.login);
+    const login = useAppStore((state) => state.login);
     const navigate = useNavigate();
 
     const onSubmit = (data) => {
@@ -54,8 +54,8 @@ const LoginPage = () => {
                                     type="email"
                                     placeholder="Email"
                                     className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.email
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                        : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
                                         }`}
                                     {...register('email', {
                                         required: 'Email is required',
@@ -75,8 +75,8 @@ const LoginPage = () => {
                                     type="password"
                                     placeholder="Password"
                                     className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.password
-                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                                            : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                        : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
                                         }`}
                                     {...register('password', {
                                         required: 'Password is required',

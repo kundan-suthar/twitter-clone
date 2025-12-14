@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Tweet from './Tweet';
 import Button from '../ui/Button';
-import { useAuthStore } from '../../store/authStore';
+import { useAppStore } from '../../store/useAppStore';
 import { Image, Gift, List, Smile, Calendar, MapPin, Globe } from 'lucide-react';
 
 const icons = [Image, Gift, List, Smile, Calendar, MapPin];
 
 const Feed = () => {
     const [activeTab, setActiveTab] = useState('For you');
-    const user = useAuthStore((state) => state.user);
+    const user = useAppStore((state) => state.user);
     const [tweetContent, setTweetContent] = useState('');
 
     // Mock Tweets

@@ -4,10 +4,10 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import FeedPage from './pages/FeedPage';
 import Layout from './components/layout/Layout';
-import { useAuthStore } from './store/authStore';
+import { useAppStore } from './store/useAppStore';
 
 const App = () => {
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isAuthenticated = useAppStore((state) => state.isAuthenticated);
 
   return (
     <Router>
