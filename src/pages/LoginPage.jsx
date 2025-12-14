@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import Button from '../components/ui/Button';
+import { useForm } from 'react-hook-form';
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
 
     const login = useAuthStore((state) => state.login);
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const success = login(email, password);
+    const onSubmit = (data) => {
+        const success = login(data.email, data.password);
         if (success) navigate('/home');
     };
 
@@ -44,28 +47,44 @@ const LoginPage = () => {
                         <h2 className="text-2xl md:text-3xl font-bold text-[#e7e9ea]">Join today.</h2>
                     </div>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="space-y-4">
                             <div className="group relative">
                                 <input
                                     type="email"
                                     placeholder="Email"
-                                    className="peer w-full bg-transparent border border-zinc-600 rounded focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0] px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    required
+                                    className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.email
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                            : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        }`}
+                                    {...register('email', {
+                                        required: 'Email is required',
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: 'Invalid email address',
+                                        },
+                                    })}
                                 />
+                                {errors.email && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                                )}
                             </div>
 
                             <div className="group relative">
                                 <input
                                     type="password"
                                     placeholder="Password"
-                                    className="peer w-full bg-transparent border border-zinc-600 rounded focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0] px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    required
+                                    className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.password
+                                            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                            : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        }`}
+                                    {...register('password', {
+                                        required: 'Password is required',
+                                    })}
                                 />
+                                {errors.password && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+                                )}
                             </div>
                         </div>
 
