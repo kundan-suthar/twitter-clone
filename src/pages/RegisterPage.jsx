@@ -3,16 +3,18 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import Button from '../components/ui/Button';
 
-const LoginPage = () => {
+const RegisterPage = () => {
+    const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const login = useAuthStore((state) => state.login);
+    const signup = useAuthStore((state) => state.signup);
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const success = login(email, password);
+        const success = signup({ fullName, email, username, password });
         if (success) navigate('/home');
     };
 
@@ -41,11 +43,22 @@ const LoginPage = () => {
 
                     <div className="space-y-4">
                         <h1 className="text-5xl md:text-7xl font-bold tracking-tight">Happening now</h1>
-                        <h2 className="text-2xl md:text-3xl font-bold text-[#e7e9ea]">Join today.</h2>
+                        <h2 className="text-2xl md:text-3xl font-bold text-[#e7e9ea]">Create your account</h2>
                     </div>
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-4">
+                            <div className="group relative">
+                                <input
+                                    type="text"
+                                    placeholder="Full Name"
+                                    className="peer w-full bg-transparent border border-zinc-600 rounded focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0] px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg"
+                                    value={fullName}
+                                    onChange={(e) => setFullName(e.target.value)}
+                                    required
+                                />
+                            </div>
+
                             <div className="group relative">
                                 <input
                                     type="email"
@@ -53,6 +66,17 @@ const LoginPage = () => {
                                     className="peer w-full bg-transparent border border-zinc-600 rounded focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0] px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+
+                            <div className="group relative">
+                                <input
+                                    type="text"
+                                    placeholder="Username"
+                                    className="peer w-full bg-transparent border border-zinc-600 rounded focus:border-[#1d9bf0] focus:ring-1 focus:ring-[#1d9bf0] px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
                                     required
                                 />
                             </div>
@@ -71,21 +95,17 @@ const LoginPage = () => {
 
                         <div className="space-y-3">
                             <Button type="submit" fullWidth size="lg">
-                                Log in
-                            </Button>
-
-                            <Button type="button" variant="ghost" fullWidth className="border border-zinc-600 text-[#1d9bf0]">
-                                Forgot password?
+                                Sign up
                             </Button>
                         </div>
 
                         <div className="text-zinc-500 text-sm">
-                            Don't have an account?
+                            Have an account already?
                             <Link
-                                to="/register"
+                                to="/login"
                                 className="text-[#1d9bf0] cursor-pointer hover:underline ml-1"
                             >
-                                Sign up
+                                Log in
                             </Link>
                         </div>
                     </form>
@@ -95,4 +115,4 @@ const LoginPage = () => {
     );
 };
 
-export default LoginPage;
+export default RegisterPage;
