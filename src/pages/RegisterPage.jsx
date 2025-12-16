@@ -14,9 +14,16 @@ const RegisterPage = () => {
     const signup = useAppStore((state) => state.signup);
     const navigate = useNavigate();
 
+    const [serverError, setServerError] = React.useState('');
+
     const onSubmit = async (data) => {
-        const success = await signup(data);
-        if (success) navigate('/home');
+        setServerError('');
+        const { success, error } = await signup(data);
+        if (success) {
+            navigate('/login');
+        } else {
+            setServerError(error);
+        }
     };
 
     return (
@@ -45,10 +52,39 @@ const RegisterPage = () => {
                     <div className="space-y-4">
                         <h1 className="text-5xl md:text-7xl font-bold tracking-tight">Happening now</h1>
                         <h2 className="text-2xl md:text-3xl font-bold text-[#e7e9ea]">Create your account</h2>
+                        {serverError && (
+                            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded">
+                                {serverError}
+                            </div>
+                        )}
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                         <div className="space-y-4">
+                            <div className="group relative">
+                                <label className="block text-zinc-500 text-sm mb-1 ml-1">Avatar</label>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    className={`peer w-full bg-transparent border rounded focus:ring-1 px-4 py-3 outline-none transition-all placeholder-zinc-500 text-lg ${errors.avatar
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+                                        : 'border-zinc-600 focus:border-[#1d9bf0] focus:ring-[#1d9bf0]'
+                                        }`}
+                                    {...register('avatar', {
+                                        required: 'Avatar is required',
+                                        validate: {
+                                            lessThan10MB: files => files[0]?.size < 10000000 || 'Max 10MB',
+                                            acceptedFormats: files =>
+                                                ['image/jpeg', 'image/png', 'image/gif'].includes(
+                                                    files[0]?.type
+                                                ) || 'Only PNG, JPEG e GIF',
+                                        },
+                                    })}
+                                />
+                                {errors.avatar && (
+                                    <p className="text-red-500 text-sm mt-1">{errors.avatar.message}</p>
+                                )}
+                            </div>
                             <div className="group relative">
                                 <input
                                     type="text"
