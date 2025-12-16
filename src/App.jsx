@@ -5,6 +5,7 @@ import RegisterPage from './pages/RegisterPage';
 import FeedPage from './pages/FeedPage';
 import Layout from './components/layout/Layout';
 import { useAppStore } from './store/useAppStore';
+import ProtectedRoute from './components/auth/ProtectedRoute';
 
 const App = () => {
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
@@ -16,12 +17,14 @@ const App = () => {
         <Route path="/register" element={<RegisterPage />} />
 
         {/* Protected Routes */}
-        <Route element={<Layout />}>
-          <Route path="/home" element={<FeedPage />} />
-          <Route path="/explore" element={<div className="p-4 text-white">Explore Page (Coming Soon)</div>} />
-          <Route path="/notifications" element={<div className="p-4 text-white">Notifications Page (Coming Soon)</div>} />
-          <Route path="/messages" element={<div className="p-4 text-white">Messages Page (Coming Soon)</div>} />
-          <Route path="/profile/:handle" element={<div className="p-4 text-white">Profile Page (Coming Soon)</div>} />
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/home" element={<FeedPage />} />
+            <Route path="/explore" element={<div className="p-4 text-white">Explore Page (Coming Soon)</div>} />
+            <Route path="/notifications" element={<div className="p-4 text-white">Notifications Page (Coming Soon)</div>} />
+            <Route path="/messages" element={<div className="p-4 text-white">Messages Page (Coming Soon)</div>} />
+            <Route path="/profile/:handle" element={<div className="p-4 text-white">Profile Page (Coming Soon)</div>} />
+          </Route>
         </Route>
 
         <Route path="/" element={<Navigate to="/login" replace />} />

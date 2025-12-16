@@ -10,11 +10,11 @@ export const createAuthSlice = (set) => ({
             if (response.status === 200 || response.status === 201) {
                 const user = response.data.data.user;
                 const token = response.data.data.accessToken;
-                set({ user: user, access: token });
+                set({ user: user, access: token, isAuthenticated: true });
                 return { success: true };
             }
         } catch (error) {
-            return { success: false, error: error.response.data || "Server error occurred" };
+            return { success: false, error: error?.response?.data || "Server error occurred" };
         }
         return false;
     },
@@ -49,5 +49,12 @@ export const createAuthSlice = (set) => ({
         }
         return false;
     },
-    logout: () => set({ user: null, isAuthenticated: false }),
+    logout: async () => {
+        try {
+            await axiosClient.post('/users/logout');
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
+        set({ user: null, access: null, isAuthenticated: false });
+    },
 });

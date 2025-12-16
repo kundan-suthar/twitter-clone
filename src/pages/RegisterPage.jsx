@@ -22,7 +22,7 @@ const RegisterPage = () => {
         if (success) {
             navigate('/login');
         } else {
-            setServerError(error);
+            setServerError(error.message);
         }
     };
 

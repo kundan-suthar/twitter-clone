@@ -1,10 +1,10 @@
-import axios from "axios";
+import { axiosClient } from "../api";
 
 
 export const useRefresh = () => {
     const refresh = async () => {
         try {
-            const response = await axios.get("/refresh-toke", {
+            const response = await axiosClient.get("/users/refresh-token", {
                 withCredentials: true
             });
             return response.data.data.accessToken;

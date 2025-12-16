@@ -13,10 +13,15 @@ const LoginPage = () => {
 
     const login = useAppStore((state) => state.login);
     const navigate = useNavigate();
+    const [serverError, setServerError] = React.useState('');
 
-    const onSubmit = (data) => {
-        const success = login(data.email, data.password);
-        if (success) navigate('/home');
+    const onSubmit = async (data) => {
+        const { success, error } = await login(data.email, data.password);
+        if (success) {
+            navigate('/home');
+        } else {
+            setServerError(error.message);
+        }
     };
 
     return (
@@ -45,6 +50,11 @@ const LoginPage = () => {
                     <div className="space-y-4">
                         <h1 className="text-5xl md:text-7xl font-bold tracking-tight">Happening now</h1>
                         <h2 className="text-2xl md:text-3xl font-bold text-[#e7e9ea]">Join today.</h2>
+                        {serverError && (
+                            <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded">
+                                {serverError}
+                            </div>
+                        )}
                     </div>
 
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

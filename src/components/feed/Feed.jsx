@@ -9,7 +9,21 @@ const icons = [Image, Gift, List, Smile, Calendar, MapPin];
 const Feed = () => {
     const [activeTab, setActiveTab] = useState('For you');
     const user = useAppStore((state) => state.user);
+    const createTweet = useAppStore((state) => state.createTweet);
+    const isCreatingTweet = useAppStore((state) => state.isCreatingTweet);
     const [tweetContent, setTweetContent] = useState('');
+
+    const handlePost = async () => {
+        if (!tweetContent.trim()) return;
+
+        const result = await createTweet(tweetContent);
+        if (result.success) {
+            setTweetContent('');
+            // Optional: refresh feed or add tweet to list locally
+        } else {
+            console.error(result.error);
+        }
+    };
 
     // Mock Tweets
     const tweets = [
@@ -108,9 +122,10 @@ const Feed = () => {
                         <Button
                             size="md"
                             className="font-bold rounded-full px-5 py-2"
-                            disabled={!tweetContent.trim()}
+                            disabled={!tweetContent.trim() || isCreatingTweet}
+                            onClick={handlePost}
                         >
-                            Post
+                            {isCreatingTweet ? "Posting..." : "Post"}
                         </Button>
                     </div>
                 </div>
