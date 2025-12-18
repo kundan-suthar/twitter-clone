@@ -7,7 +7,8 @@ const api = axios.create({
     baseURL: "http://localhost:8000/api/v1",
     headers: {
         "Content-Type": "application/json",
-    }
+    },
+    withCredentials: true,
 });
 
 
@@ -29,7 +30,11 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry &&
+            !originalRequest.url.includes("refresh-token")
+        ) {
             originalRequest._retry = true;
             const refresh = useRefresh();
             const newAccessToken = await refresh();

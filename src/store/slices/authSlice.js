@@ -4,18 +4,35 @@ export const createAuthSlice = (set) => ({
     user: null,
     access: null,
     isAuthenticated: false,
+    isCheckingAuth: true,
+    isLoggingIn: false,
+    checkAuth: async () => {
+        try {
+            const response = await axiosClient.get("/users/current-user");
+            if (response.status === 200) {
+                set({ user: response.data.data, isAuthenticated: true, isCheckingAuth: false });
+            } else {
+                set({ isCheckingAuth: false, isAuthenticated: false });
+            }
+        } catch (error) {
+            set({ isCheckingAuth: false, isAuthenticated: false });
+        }
+    },
     login: async (email, password) => {
+        set({ isLoggingIn: true });
         try {
             const response = await axiosClient.post('/users/login', { email, password });
             if (response.status === 200 || response.status === 201) {
                 const user = response.data.data.user;
                 const token = response.data.data.accessToken;
-                set({ user: user, access: token, isAuthenticated: true });
+                set({ user: user, access: token, isAuthenticated: true, isLoggingIn: false });
                 return { success: true };
             }
         } catch (error) {
+            set({ isLoggingIn: false });
             return { success: false, error: error?.response?.data || "Server error occurred" };
         }
+        set({ isLoggingIn: false });
         return false;
     },
     signup: async (userData) => {

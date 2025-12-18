@@ -6,9 +6,10 @@ const Button = ({
     size = 'md',
     fullWidth = false,
     className = '',
+    isLoading = false,
     ...props
 }) => {
-    const baseStyles = "inline-flex items-center justify-center font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-full";
+    const baseStyles = "inline-flex items-center justify-center font-bold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-full relative";
 
     const variants = {
         primary: "bg-[#1d9bf0] hover:bg-[#1a8cd8] text-white shadow-sm",
@@ -30,9 +31,15 @@ const Button = ({
     return (
         <button
             className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${widthClass} ${className}`}
+            disabled={isLoading || props.disabled}
             {...props}
         >
-            {children}
+            {isLoading ? (
+                <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                </div>
+            ) : null}
+            <span className={isLoading ? 'opacity-0' : 'opacity-100'}>{children}</span>
         </button>
     );
 };

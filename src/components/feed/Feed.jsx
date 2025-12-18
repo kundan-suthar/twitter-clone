@@ -10,6 +10,8 @@ const Feed = () => {
     const [activeTab, setActiveTab] = useState('For you');
     const user = useAppStore((state) => state.user);
     const createTweet = useAppStore((state) => state.createTweet);
+    const getAllTweets = useAppStore((state) => state.getAllTweets);
+    const tweets = useAppStore((state) => state.tweets);
     const isCreatingTweet = useAppStore((state) => state.isCreatingTweet);
     const [tweetContent, setTweetContent] = useState('');
 
@@ -25,45 +27,12 @@ const Feed = () => {
         }
     };
 
-    // Mock Tweets
-    const tweets = [
-        {
-            id: 1,
-            user: {
-                name: 'MEXC',
-                handle: '@MEXC_Official',
-                avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=MEXC'
-            },
-            content: "MEXC Golden Era Showdown is LIVE! 🔥\n\nFrom Nov 27 - Dec 17, join the Golden Era Showdown and complete for exclusive rewards. Step into the arena and unlock a wave of surprises.\n\nWhy can't you be the next Gold Catcher?",
-            image: "https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=2069&auto=format&fit=crop",
-            stats: { replies: 141, retweets: 84, likes: 2100, views: '232K' },
-            timestamp: 'Ad'
-        },
-        {
-            id: 2,
-            user: {
-                name: 'React',
-                handle: '@reactjs',
-                avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=React'
-            },
-            content: "React 19 is now available! \n\nWe're excited to share the latest version of React with support for Server Actions, the new use() hook, and better custom element support.",
-            image: null,
-            stats: { replies: 452, retweets: 1205, likes: 8500, views: '1.2M' },
-            timestamp: '2h'
-        },
-        {
-            id: 3,
-            user: {
-                name: 'Elon Musk',
-                handle: '@elonmusk',
-                avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=Elon'
-            },
-            content: "Make humanity multiplanetary.",
-            image: null,
-            stats: { replies: '15K', retweets: '24K', likes: '185K', views: '20M' },
-            timestamp: '5h'
-        }
-    ];
+    useEffect(() => {
+        getAllTweets();
+        console.log(tweets);
+
+    }, []);
+
 
     return (
         <div className="flex flex-col min-h-screen">

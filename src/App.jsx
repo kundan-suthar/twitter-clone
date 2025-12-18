@@ -9,6 +9,22 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 
 const App = () => {
   const isAuthenticated = useAppStore((state) => state.isAuthenticated);
+  const checkAuth = useAppStore((state) => state.checkAuth);
+  const isCheckingAuth = useAppStore((state) => state.isCheckingAuth);
+
+  React.useEffect(() => {
+    (async () => {
+      await checkAuth();
+    })();
+  }, [checkAuth]);
+
+  if (isCheckingAuth) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+      </div>
+    );
+  }
 
   return (
     <Router>

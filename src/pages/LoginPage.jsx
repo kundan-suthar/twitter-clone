@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppStore } from '../store/useAppStore';
 import Button from '../components/ui/Button';
 import { useForm } from 'react-hook-form';
 
 const LoginPage = () => {
+    const isAuthenticated = useAppStore((state) => state.isAuthenticated);
+    const isLoggingIn = useAppStore((state) => state.isLoggingIn);
+
     const {
         register,
         handleSubmit,
@@ -20,9 +23,15 @@ const LoginPage = () => {
         if (success) {
             navigate('/home');
         } else {
-            setServerError(error.message);
+            setServerError(error);
         }
     };
+    useEffect(() => {
+
+        if (isAuthenticated) {
+            navigate('/home');
+        }
+    }, [isAuthenticated]);
 
     return (
         <div className="min-h-screen bg-black text-[#eff3f4] flex flex-col md:flex-row font-sans">
@@ -99,7 +108,7 @@ const LoginPage = () => {
                         </div>
 
                         <div className="space-y-3">
-                            <Button type="submit" fullWidth size="lg">
+                            <Button type="submit" fullWidth size="lg" isLoading={isLoggingIn}>
                                 Log in
                             </Button>
 
