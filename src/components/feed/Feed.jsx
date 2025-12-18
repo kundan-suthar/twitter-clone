@@ -14,6 +14,7 @@ const Feed = () => {
     const tweets = useAppStore((state) => state.tweets);
     const isCreatingTweet = useAppStore((state) => state.isCreatingTweet);
     const [tweetContent, setTweetContent] = useState('');
+    console.log(tweets);
 
     const handlePost = async () => {
         if (!tweetContent.trim()) return;
@@ -108,7 +109,7 @@ const Feed = () => {
             {/* Tweets Feed */}
             <div>
                 {tweets.map(tweet => (
-                    <Tweet key={tweet.id} {...tweet} />
+                    <Tweet key={tweet.tweetId} {...tweet} />
                 ))}
             </div>
         </div>

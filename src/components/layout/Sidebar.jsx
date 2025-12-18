@@ -18,7 +18,7 @@ const Sidebar = () => {
     const user = useAppStore((state) => state.user);
     const logout = useAppStore((state) => state.logout);
     const [showLogoutMenu, setShowLogoutMenu] = useState(false);
-    console.log(user);
+
 
     const navItems = [
         { icon: Home, label: 'Home', path: '/home' },

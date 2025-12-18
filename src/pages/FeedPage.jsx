@@ -1,8 +1,12 @@
-import React from 'react';
+import ErrorBoundary from '../components/common/ErrorBoundary';
 import Feed from '../components/feed/Feed';
 
 const FeedPage = () => {
-    return <Feed />;
+    return (
+        <ErrorBoundary>
+            <Feed />
+        </ErrorBoundary>
+    );
 };
 
 export default FeedPage;

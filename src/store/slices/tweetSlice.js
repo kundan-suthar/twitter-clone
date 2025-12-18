@@ -24,8 +24,8 @@ export const createTweetSlice = (set) => ({
         try {
             const response = await axiosClient.get('/tweets/getAllTweets');
             if (response.status === 200) {
-                set({ tweets: response.data });
-                return { success: true, data: response.data };
+                set({ tweets: response.data.data });
+                return { success: true, data: response.data.data };
             }
         } catch (error) {
             return {
