@@ -23,6 +23,8 @@ const Feed = () => {
         if (result.success) {
             setTweetContent('');
             // Optional: refresh feed or add tweet to list locally
+            console.log(tweets);
+
         } else {
             console.error(result.error);
         }
@@ -30,8 +32,6 @@ const Feed = () => {
 
     useEffect(() => {
         getAllTweets();
-        console.log(tweets);
-
     }, []);
 
 

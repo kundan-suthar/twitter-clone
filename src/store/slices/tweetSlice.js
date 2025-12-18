@@ -8,8 +8,14 @@ export const createTweetSlice = (set) => ({
         try {
             const response = await axiosClient.post('/tweets', { content });
             set({ isCreatingTweet: false });
+
             if (response.status === 201 || response.status === 200) {
-                return { success: true, data: response.data };
+                const newTweet = response.data.data;
+                set((state) => ({
+                    tweets: [newTweet, ...state.tweets],
+                    isCreatingTweet: false
+                }));
+                return { success: true, data: newTweet };
             }
         } catch (error) {
             set({ isCreatingTweet: false });
