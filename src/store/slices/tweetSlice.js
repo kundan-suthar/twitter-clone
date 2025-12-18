@@ -3,10 +3,24 @@ import { axiosClient } from "../../api";
 export const createTweetSlice = (set) => ({
     isCreatingTweet: false,
     tweets: [],
-    createTweet: async (content) => {
+    createTweet: async (content, image = null) => {
         set({ isCreatingTweet: true });
         try {
-            const response = await axiosClient.post('/tweets', { content });
+            let response;
+            if (image) {
+                const formData = new FormData();
+                formData.append('content', content);
+                formData.append('postImage', image);
+
+                response = await axiosClient.post('/tweets', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            } else {
+                response = await axiosClient.post('/tweets', { content });
+            }
+
             set({ isCreatingTweet: false });
 
             if (response.status === 201 || response.status === 200) {

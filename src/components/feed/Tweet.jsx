@@ -4,7 +4,7 @@ import TimeAgo from '../common/Timeago';
 const Tweet = ({
     user = {},
     content = "",
-    image = null,
+    postImage,
     stats = { replies: 0, retweets: 0, likes: 0, views: 0 },
     createdAt
 }) => {
@@ -47,9 +47,9 @@ const Tweet = ({
                 </div>
 
                 {/* Image attachment */}
-                {image && (
-                    <div className="mt-3 rounded-2xl overflow-hidden border border-zinc-800 bg-zinc-900/50">
-                        <img src={image} alt="Tweet attachment" className="w-full h-auto max-h-[500px] object-cover" />
+                {postImage && (
+                    <div className="mt-3 ">
+                        <img src={postImage} alt="Tweet attachment" className="w-full h-auto max-h-[500px] object-contain" />
                     </div>
                 )}
 

@@ -12,6 +12,7 @@ const RegisterPage = () => {
     } = useForm();
 
     const signup = useAppStore((state) => state.signup);
+    const isSigningUp = useAppStore((state) => state.isSigningUp);
     const navigate = useNavigate();
 
     const [serverError, setServerError] = React.useState('');
@@ -159,7 +160,7 @@ const RegisterPage = () => {
                         </div>
 
                         <div className="space-y-3">
-                            <Button type="submit" fullWidth size="lg">
+                            <Button type="submit" fullWidth size="lg" isLoading={isSigningUp}>
                                 Sign up
                             </Button>
                         </div>

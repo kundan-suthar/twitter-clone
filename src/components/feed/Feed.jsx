@@ -14,14 +14,31 @@ const Feed = () => {
     const tweets = useAppStore((state) => state.tweets);
     const isCreatingTweet = useAppStore((state) => state.isCreatingTweet);
     const [tweetContent, setTweetContent] = useState('');
+    const [selectedImage, setSelectedImage] = useState(null);
+    const fileInputRef = React.useRef(null);
     console.log(tweets);
 
-    const handlePost = async () => {
-        if (!tweetContent.trim()) return;
+    const handleIconClick = (index) => {
+        // Index 0 is the Image icon
+        if (index === 0) {
+            fileInputRef.current?.click();
+        }
+    };
 
-        const result = await createTweet(tweetContent);
+    const handleImageSelect = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
+            setSelectedImage(file);
+        }
+    };
+
+    const handlePost = async () => {
+        if (!tweetContent.trim() && !selectedImage) return;
+
+        const result = await createTweet(tweetContent, selectedImage);
         if (result.success) {
             setTweetContent('');
+            setSelectedImage(null);
             // Optional: refresh feed or add tweet to list locally
             console.log(tweets);
 
@@ -76,6 +93,22 @@ const Feed = () => {
                         onChange={(e) => setTweetContent(e.target.value)}
                     />
 
+                    {selectedImage && (
+                        <div className="relative mb-4">
+                            <img
+                                src={URL.createObjectURL(selectedImage)}
+                                alt="Selected"
+                                className="rounded-2xl max-h-[300px] w-auto object-cover"
+                            />
+                            <button
+                                onClick={() => setSelectedImage(null)}
+                                className="absolute top-2 left-2 bg-black/75 rounded-full p-1.5 hover:bg-black/50 transition-colors"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-white"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                            </button>
+                        </div>
+                    )}
+
                     <div className="flex items-center text-[#1d9bf0] font-bold text-sm border-b border-zinc-800 pb-3 mb-3 cursor-pointer">
                         <Globe size={16} className="mr-1" />
                         <span>Everyone can reply</span>
@@ -83,8 +116,19 @@ const Feed = () => {
 
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-0.5 text-[#1d9bf0]">
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                className="hidden"
+                                accept="image/*"
+                                onChange={handleImageSelect}
+                            />
                             {icons.map((Icon, idx) => (
-                                <div key={idx} className="p-2 rounded-full hover:bg-[#1d9bf0]/10 cursor-pointer transition-colors">
+                                <div
+                                    key={idx}
+                                    className="p-2 rounded-full hover:bg-[#1d9bf0]/10 cursor-pointer transition-colors"
+                                    onClick={() => handleIconClick(idx)}
+                                >
                                     <Icon size={20} />
                                 </div>
                             ))}
@@ -92,7 +136,7 @@ const Feed = () => {
                         <Button
                             size="md"
                             className="font-bold rounded-full px-5 py-2"
-                            disabled={!tweetContent.trim() || isCreatingTweet}
+                            disabled={(!tweetContent.trim() && !selectedImage) || isCreatingTweet}
                             onClick={handlePost}
                         >
                             {isCreatingTweet ? "Posting..." : "Post"}
@@ -108,7 +152,7 @@ const Feed = () => {
 
             {/* Tweets Feed */}
             <div>
-                {tweets.map(tweet => (
+                {tweets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map(tweet => (
                     <Tweet key={tweet.tweetId} {...tweet} />
                 ))}
             </div>

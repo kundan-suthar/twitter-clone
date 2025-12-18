@@ -6,6 +6,7 @@ export const createAuthSlice = (set) => ({
     isAuthenticated: false,
     isCheckingAuth: true,
     isLoggingIn: false,
+    isSigningUp: false,
     checkAuth: async () => {
         try {
             const response = await axiosClient.get("/users/current-user");
@@ -36,6 +37,7 @@ export const createAuthSlice = (set) => ({
         return false;
     },
     signup: async (userData) => {
+        set({ isSigningUp: true });
         try {
             const formData = new FormData();
             formData.append('fullName', userData.fullName);
@@ -56,14 +58,16 @@ export const createAuthSlice = (set) => ({
 
             console.log(response);
             if (response.status === 201 || response.status === 200) {
+                set({ isSigningUp: false });
                 return { success: true };
             }
         } catch (error) {
-
+            set({ isSigningUp: false });
             console.error("Signup error:", error);
             // You might want to set an error state here
             return { success: false, error: error.response.data || "Server error occurred" };
         }
+        set({ isSigningUp: false });
         return false;
     },
     logout: async () => {
