@@ -2,6 +2,8 @@ import { MessageCircle, Repeat2, Heart, BarChart2, Share, MoreHorizontal } from 
 import TimeAgo from '../common/Timeago';
 
 import { useAppStore } from '../../store/useAppStore';
+import ReplyModal from './ReplyModal';
+import { useState } from 'react';
 
 const Tweet = ({
     tweetId,
@@ -11,8 +13,10 @@ const Tweet = ({
     stats = { replies: 0, retweets: 0, likes: 0, views: 0 },
     createdAt,
     isLiked = false,
-    likesCount = 0
+    likesCount = 0,
+    commentsCount = 0
 }) => {
+    const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
     const { fullName, username, avatar } = user;
     const toggTweetLike = useAppStore((state) => state.toggTweetLike);
 
@@ -68,16 +72,29 @@ const Tweet = ({
                 )}
 
                 {/* Actions */}
-                <div className="flex items-center justify-between mt-3 max-w-[425px]">
-                    <ActionButton icon={MessageCircle} count={stats.replies} />
-                    <ActionButton icon={Repeat2} count={stats.retweets} colorClass="hover:text-green-500" bgClass="group-hover:bg-green-500/10" />
+                <div className="flex items-center justify-start mt-3 ml-3 gap-2 max-w-[425px]">
+                    <ActionButton
+                        icon={MessageCircle}
+                        count={commentsCount}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsReplyModalOpen(true);
+                        }}
+                    />
+                    {/* <ActionButton icon={Repeat2} count={stats.retweets} colorClass="hover:text-green-500" bgClass="group-hover:bg-green-500/10" /> */}
                     <ActionButton icon={Heart} count={likesCount} colorClass="hover:text-pink-500" bgClass="group-hover:bg-pink-500/10" onClick={handleLike} isActive={isLiked} activeColorClass="text-pink-500" />
-                    <ActionButton icon={BarChart2} count={stats.views} />
+                    {/* <ActionButton icon={BarChart2} count={stats.views} />
                     <div className="flex items-center">
                         <ActionButton icon={Share} count="" />
-                    </div>
+                    </div> */}
                 </div>
             </div>
+
+            <ReplyModal
+                isOpen={isReplyModalOpen}
+                onClose={() => setIsReplyModalOpen(false)}
+                tweet={{ tweetId, user, content, createdAt }}
+            />
         </article>
     );
 };

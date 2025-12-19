@@ -94,5 +94,27 @@ export const createTweetSlice = (set, get) => ({
             };
         }
         return { success: false, error: "Unexpected error" };
+    },
+    addComment: async (tweetId, content) => {
+        try {
+            const response = await axiosClient.post(`/comments/tweet/${tweetId}`, { content });
+            if (response.status === 201 || response.status === 200) {
+                // Update the tweets list to reflect increased comment count
+                set((state) => ({
+                    tweets: state.tweets.map((t) =>
+                        t.tweetId === tweetId
+                            ? { ...t, commentsCount: t.commentsCount + 1 }
+                            : t
+                    )
+                }));
+                return { success: true, data: response.data.data };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                error: error.response?.data?.message || "Failed to add comment"
+            };
+        }
+        return { success: false, error: "Unexpected error" };
     }
 });
