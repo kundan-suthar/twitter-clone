@@ -1,6 +1,6 @@
 import { axiosClient } from "../../api";
 
-export const createTweetSlice = (set) => ({
+export const createTweetSlice = (set, get) => ({
     isCreatingTweet: false,
     tweets: [],
     createTweet: async (content, image = null) => {
@@ -55,4 +55,44 @@ export const createTweetSlice = (set) => ({
         }
         return { success: false, error: "Unexpected error" };
     },
+    toggTweetLike: async (tweetId) => {
+        const currentTweets = get().tweets;
+        const tweetIndex = currentTweets.findIndex(t => t.tweetId === tweetId);
+
+        if (tweetIndex === -1) return;
+
+        const tweet = currentTweets[tweetIndex];
+        const isLiked = tweet.isLiked;
+
+        // Optimistic update
+        const updatedTweets = [...currentTweets];
+        updatedTweets[tweetIndex] = {
+            ...tweet,
+            isLiked: !isLiked,
+            likesCount: tweet.isLiked
+                ? tweet.likesCount - 1
+                : tweet.likesCount + 1,
+        };
+
+        set({ tweets: updatedTweets });
+
+        try {
+            const response = await axiosClient.post('/likes/toggle/t', { tweetId });
+            if (response.status === 200) {
+                // update from server if needed, or just let the optimistic update stand
+                // return { success: true, data: respone.data.data };
+                return { success: true };
+            }
+        } catch (error) {
+            // Revert on error
+            console.error("Failed to toggle like, reverting...", error);
+            set({ tweets: currentTweets });
+
+            return {
+                success: false,
+                error: error.response?.data?.message || "Failed to toggle like"
+            };
+        }
+        return { success: false, error: "Unexpected error" };
+    }
 });
